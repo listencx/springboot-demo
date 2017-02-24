@@ -13,6 +13,7 @@ import com.cx.springboot.domain.User;
 import com.cx.springboot.service.UserService;
 
 @RestController
+@RequestMapping(value="/user")
 public class UserController {
 
 	@Resource
@@ -23,7 +24,7 @@ public class UserController {
 		return "Hello World";
 	}
 
-	@RequestMapping(value = "/save/{info}", method = RequestMethod.GET)
+	@RequestMapping(value = "/save/{info}", method = RequestMethod.POST)
 	public String saveUser(@PathVariable("info") String info) {
 		String[] user1 = info.split("&");
 		User user = new User();
@@ -38,11 +39,22 @@ public class UserController {
 				return "SUCCESS";
 			} catch (Exception e) {
 				e.printStackTrace();
-				return "DEFAULT";
+				return "FAIL";
 			}
 		}
 	}
 
+	@RequestMapping(value="/{name}",method=RequestMethod.DELETE)
+	public String deleteUser(String name) {
+		try {
+			userService.deleteByName(name);
+			return "SUCCESS";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "FAIL";
+		}
+		
+	}
 	@RequestMapping(value = "/check/{name}", method = RequestMethod.GET)
 	public String checkUser(String name) {
 		List<User> users = userService.getUserByName(name);

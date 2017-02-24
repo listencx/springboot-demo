@@ -17,4 +17,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	
 	@Cacheable
 	User findByUsersName(String string);
+	
+	void deleteByName(String name);
 }
