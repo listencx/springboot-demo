@@ -8,11 +8,12 @@ import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
 import org.springframework.stereotype.Component;
 
-@ServerEndpoint(value = "/websocket")
+@ServerEndpoint(value = "/websocket/{id}")
 @Component
 public class MyWebsocket {
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
@@ -27,19 +28,19 @@ public class MyWebsocket {
     /**
      * 连接建立成功调用的方法*/
     @OnOpen
-    public void onOpen(Session session) {
+    public void onOpen(@PathParam("id") String id, Session session) {
         this.session = session;
         webSocketSet.add(this);     //加入set中
         addOnlineCount();           //在线数加1
         try {
-        	sendInfo("有新连接加入！当前在线人数为" + getOnlineCount());
+        	sendInfo("有新连接:" + id + "加入！当前在线人数为" + getOnlineCount());
 		} catch (IOException e1) {
 			System.out.println("IO异常");
 		}
-        System.out.println("有新连接加入！当前在线人数为" + getOnlineCount());
+        System.out.println("有新连接:" + id + "加入！当前在线人数为" + getOnlineCount());
     }
 
-    /**
+    /**p
      * 连接关闭调用的方法
      * @throws IOException 
      */
@@ -65,8 +66,8 @@ public class MyWebsocket {
 
     @OnError
     public void onError(Session session, Throwable error) {
-        System.out.println("发生错误");
-        error.printStackTrace();
+//        System.out.println("发生错误");
+//        error.printStackTrace();
     }
 
 
